@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 // Sert les fichiers statiques (ton HTML, CSS, JS)
-app.use(express.static(path.join(__dirname)));  // Serveer tout depuis le répertoire courant
+app.use(express.static(path.join(__dirname, 'public')));  // Le dossier 'public' doit contenir ton index.html, JS et CSS
 
 // Connexion à MongoDB Atlas avec l'URI stocké dans les variables d'environnement
 mongoose.connect(process.env.MONGODB_URI)
