@@ -1,0 +1,49 @@
+<script>
+  const backendUrl = "https://evaluation-forum-backend.onrender.com";  // Remplace par l'URL de ton backend
+
+  async function ajouterAvis() {
+    const phase = phaseSelect.value;
+    const tache = tacheSelect.value;
+    const defaillance = document.getElementById('defaillance').value.trim();
+    const gravite = parseInt(document.getElementById('gravite').value);
+    const occurence = parseInt(document.getElementById('occurence').value);
+    const detectabilite = parseInt(document.getElementById('detectabilite').value);
+    const rpn = gravite * occurence * detectabilite;
+
+    if (!phase || !tache || !defaillance || !gravite || !occurence || !detectabilite) {
+      alert("Merci de remplir tous les champs avant d’ajouter un avis.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${backendUrl}/ajouter-avis`, {  // Utilisation de l'URL du backend en ligne
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phase, tache, defaillance, gravite, occurence, detectabilite, rpn })
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert("✅ Avis bien enregistré !");
+        const row = tableBody.insertRow();
+        [phase, tache, defaillance, gravite, occurence, detectabilite, rpn].forEach(text => {
+          const cell = row.insertCell();
+          cell.textContent = text;
+        });
+
+        document.getElementById('defaillance').value = '';
+        document.getElementById('gravite').value = '';
+        document.getElementById('occurence').value = '';
+        document.getElementById('detectabilite').value = '';
+        document.getElementById('evaluation').style.display = 'none';
+        document.getElementById('rpn').innerText = '-';
+      } else {
+        alert("Erreur : " + result.message);
+      }
+    } catch (error) {
+      alert("Erreur de connexion au serveur.");
+      console.error(error);
+    }
+  }
+</script>
